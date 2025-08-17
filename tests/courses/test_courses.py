@@ -8,6 +8,13 @@ new_course = {"title":          "Playwright",
               "description":    "Playwright",
               "max_score":      "100",
               "min_score":      "10"}
+
+edited_course = {"title":          "PW",
+              "estimated_time": "3 weeks",
+              "description":    "PW",
+              "max_score":      "80",
+              "min_score":      "1"}
+
 @pytest.mark.regression
 @pytest.mark.courses
 class TestCourses:
@@ -45,4 +52,33 @@ class TestCourses:
                                                     estimated_time=new_course["estimated_time"],
                                                     max_score=new_course["max_score"],
                                                     min_score=new_course["min_score"],
+                                                    index=0)
+
+    def test_edit_course(self,courses_list_page: CoursesListPage, create_course_page: CreateCoursePage):
+        create_course_page.goto('https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/courses/create')
+        create_course_page.image_upload_widget.upload_preview_image('./testdata/files/image.png')
+        create_course_page.create_course_form.fill(title=new_course["title"],
+                                                   estimated_time=new_course["estimated_time"],
+                                                   description=new_course["description"],
+                                                   max_score=new_course["max_score"],
+                                                   min_score=new_course["min_score"])
+        create_course_page.create_course_toolbar.click_create_course_button()
+        courses_list_page.course_view.check_visible(title=new_course["title"],
+                                                    estimated_time=new_course["estimated_time"],
+                                                    max_score=new_course["max_score"],
+                                                    min_score=new_course["min_score"],
+                                                    index=0)
+        courses_list_page.course_view.menu.click_edit(index=0)
+        # по хорошему можно сделать отдельные   компоненты на  апдейт  карточки (в реальных ситуациях вполне возможны отличия),
+        # но у нас  локаторы там полностью совпадают с созданием + в требованиях по заданию небыло про добавление новых компонентов :)
+        create_course_page.create_course_form.fill(title=edited_course["title"],
+                                                   estimated_time=edited_course["estimated_time"],
+                                                   description=edited_course["description"],
+                                                   max_score=edited_course["max_score"],
+                                                   min_score=edited_course["min_score"])
+        create_course_page.create_course_toolbar.click_create_course_button()
+        courses_list_page.course_view.check_visible(title=edited_course["title"],
+                                                    estimated_time=edited_course["estimated_time"],
+                                                    max_score=edited_course["max_score"],
+                                                    min_score=edited_course["min_score"],
                                                     index=0)
