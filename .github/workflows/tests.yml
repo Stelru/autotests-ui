@@ -49,6 +49,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
             name: Allure_results
+            path: gh-pages
         if: always()
         continue-on-error: true
 
