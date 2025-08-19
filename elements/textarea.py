@@ -2,11 +2,19 @@ from playwright.sync_api import Locator, expect
 import allure
 from elements.base_element import BaseElement
 from tools.logger import get_logger
+from ui_coverage_tool import ActionType
 logger = get_logger("TEXTAREA")
 
 class Textarea(BaseElement):
     def get_locator(self, nth: int = 0, **kwargs) -> Locator:
         return super().get_locator(nth, **kwargs).locator('textarea').first
+
+    def get_raw_locator(self, nth: int = 0, **kwargs) -> str:
+        # Переопределяем метод формирования XPath-селектора:
+        #  - сначала получаем общий селектор блока
+        #  - затем уточняем путь до самого <input>, добавляя '//input'
+        # Это нужно, чтобы трекер точно знал, с каким элементом шло взаимодействие.
+        return f'{super().get_raw_locator(**kwargs)}//textarea[1]'
 
     def fill(self, value: str, nth: int = 0, **kwargs):
         step = f'Fill {self.type_of} "{self.name}" to value "{value}"'
@@ -14,6 +22,7 @@ class Textarea(BaseElement):
             locator = self.get_locator(nth, **kwargs)
             logger.info(step)
             locator.fill(value)
+        self.track_coverage(ActionType.FILL, nth, **kwargs)
 
     def check_value(self, value: str, nth: int = 0, **kwargs):
         step = f'Checking that {self.type_of} "{self.name}" has a value "{value}"'
@@ -21,3 +30,4 @@ class Textarea(BaseElement):
             locator = self.get_locator(nth, **kwargs)
             logger.info(step)
             expect(locator).to_have_value(value)
+        self.track_coverage(ActionType.VALUE, nth, **kwargs)
