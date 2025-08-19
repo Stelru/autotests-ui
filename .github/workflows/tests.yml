@@ -35,7 +35,7 @@ jobs:
       - name: Upload Allure results as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Allure_results
+          name: allure-results
           path: |
             allure-results
 
@@ -48,8 +48,7 @@ jobs:
       - name: Get Allure history
         uses: actions/download-artifact@v4
         with:
-            name: Allure_results
-            path: gh-pages
+            name: allure-results
         if: always()
         continue-on-error: true
 
@@ -57,7 +56,7 @@ jobs:
         uses: simple-elf/allure-report-action@v1.12
         if: always()
         with:
-          allure_results: Allure_results
+          allure_results: allure-results
           allure_history: allure-history
 
 
