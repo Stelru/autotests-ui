@@ -20,6 +20,6 @@ def initialize_playwright_page(
     # context.tracing.stop(path=settings.tracing_dir.joinpath(f'{test_name}.zip'))
     browser.close()
 
-    allure.attach.file(settings.tracing_dir.joinpath(f'{test_name}.zip'), name='trace', extension='zip')
+    # allure.attach.file(settings.tracing_dir.joinpath(f'{test_name}.zip'), name='trace', extension='zip')
     # локальная проблема с записью видео на вебките и фф
     # allure.attach.file(page.video.path(), name='video', attachment_type=allure.attachment_type.WEBM)
