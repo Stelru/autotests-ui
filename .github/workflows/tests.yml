@@ -32,13 +32,24 @@ jobs:
         run: |
           pytest -m regression --alluredir=allure-results --numprocesses 2
 
+      - name: Upload Allure results as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Allure_results
+          path: allure-results
+
+  publish-report:
+    needs: run-tests
+
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Get Allure history
-        uses: actions/checkout@v4
+        uses: actions/download-artifact@v4
+        with:
+            name: Allure_results
         if: always()
         continue-on-error: true
-        with:
-          ref: gh-pages
-          path: gh-pages
 
       - name: Generates Allure Report with history
         uses: simple-elf/allure-report-action@v1.12
