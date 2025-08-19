@@ -36,7 +36,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Allure_results
-          path: allure-results
+          path: |
+            allure-results
 
   publish-report:
     needs: run-tests
